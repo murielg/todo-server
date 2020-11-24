@@ -1,5 +1,6 @@
 package com.gonzoapps.repository
 
+import com.gonzoapps.models.Todo
 import com.gonzoapps.models.User
 import com.gonzoapps.repository.DatabaseFactory.dbQuery
 import org.jetbrains.exposed.sql.ResultRow
@@ -8,10 +9,7 @@ import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.statements.InsertStatement
 
 class TodoRepository: Repository {
-    override suspend fun addUser(
-        email: String,
-        displayName: String,
-        passwordHash: String) : User? {
+    override suspend fun addUser(email: String, displayName: String, passwordHash: String) : User? {
         var statement : InsertStatement<Number>? = null
         dbQuery {
             statement = Users.insert { user ->
@@ -43,6 +41,38 @@ class TodoRepository: Repository {
             email = row[Users.email],
             displayName = row[Users.displayName],
             passwordHash = row[Users.passwordHash]
+        )
+    }
+
+    override suspend fun addTodo(userId: Int, todo: String, done: Boolean): Todo? {
+        var statement : InsertStatement<Number>? = null
+        dbQuery {
+            statement = Todos.insert {
+                it[Todos.userId] = userId
+                it[Todos.todo] = todo
+                it[Todos.done] = done
+            }
+        }
+        return rowToTodo(statement?.resultedValues?.get(0))
+    }
+
+    override suspend fun getTodos(userId: Int): List<Todo> {
+        return dbQuery {
+            Todos.select {
+                Todos.userId.eq((userId)) // 3
+            }.mapNotNull { rowToTodo(it) }
+        }
+    }
+
+    private fun rowToTodo(row: ResultRow?): Todo? {
+        if (row == null) {
+            return null
+        }
+        return Todo(
+            id = row[Todos.id],
+            userId = row[Todos.userId],
+            todo = row[Todos.todo],
+            done = row[Todos.done]
         )
     }
 }

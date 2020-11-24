@@ -5,6 +5,7 @@ import com.gonzoapps.auth.MySession
 import com.gonzoapps.auth.hash
 import com.gonzoapps.repository.DatabaseFactory
 import com.gonzoapps.repository.TodoRepository
+import com.gonzoapps.routes.todos
 import com.gonzoapps.routes.users
 import io.ktor.application.*
 import io.ktor.response.*
@@ -59,6 +60,8 @@ fun Application.module(testing: Boolean = false) {
 
     routing {
         users(db, jwtService, hashFunction)
+
+        todos(db)
     }
 }
 
