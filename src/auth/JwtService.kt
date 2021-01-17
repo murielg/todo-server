@@ -24,6 +24,5 @@ class JwtService {
         .withExpiresAt(expiresAt())
         .sign(algorithm)
 
-    private fun expiresAt() =
-        Date(System.currentTimeMillis() + 3_600_000 * 24)
+    private fun expiresAt() = Date(System.currentTimeMillis() + 3_600_000 * 24)
 }

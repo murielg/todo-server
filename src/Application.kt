@@ -8,16 +8,14 @@ import com.gonzoapps.repository.TodoRepository
 import com.gonzoapps.routes.todos
 import com.gonzoapps.routes.users
 import io.ktor.application.*
-import io.ktor.response.*
-import io.ktor.request.*
-import io.ktor.routing.*
-import io.ktor.http.*
-import io.ktor.locations.*
-import io.ktor.sessions.*
 import io.ktor.auth.*
 import io.ktor.auth.jwt.*
-import io.ktor.gson.*
 import io.ktor.features.*
+import io.ktor.gson.*
+import io.ktor.locations.*
+import io.ktor.routing.*
+import io.ktor.sessions.*
+import kotlin.collections.set
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
@@ -32,7 +30,6 @@ fun Application.module(testing: Boolean = false) {
             cookie.extensions["SameSite"] = "lax"
         }
     }
-
 
     DatabaseFactory.init()
     val db = TodoRepository()
